@@ -8,7 +8,7 @@ import { SignupDto } from 'src/auth/dto/signup.dto';
 
 @Injectable()
 export class UserService {
-  private logger;
+  private logger: Logger;
 
   constructor(
     @InjectRepository(User)

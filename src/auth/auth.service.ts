@@ -34,11 +34,13 @@ export class AuthService {
       password: hashedPassword,
     };
 
-    const token = await this.jwtService.signAsync(data.email);
-    return {
-      user: await this.userService.createUser(userDataWithHashedPassword),
-      token,
-    };
+    const user = await this.userService.createUser(userDataWithHashedPassword);
+    const token = await this.jwtService.signAsync({
+      id: user.id,
+      email: user.email,
+    });
+
+    return { user, token };
   }
 
   async login(data: LoginDto) {

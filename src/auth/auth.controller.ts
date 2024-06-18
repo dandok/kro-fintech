@@ -4,7 +4,9 @@ import { SignupDto } from './dto/signup.dto';
 import { TResponse } from '../@types/app.types';
 import { User } from 'src/user/user.entity';
 import { LoginDto } from './dto/login.dto';
+import { Public } from './decorators/public.decorator';
 
+@Public()
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}

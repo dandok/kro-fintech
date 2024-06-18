@@ -9,4 +9,9 @@ type TResponse<T = null> = {
   message: string;
 };
 
-export type { TUser, TSerializedUser, TResponse };
+type TQueryParams = {
+  limit?: number;
+  page?: number;
+};
+
+export type { TUser, TSerializedUser, TResponse, TQueryParams };

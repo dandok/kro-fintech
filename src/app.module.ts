@@ -7,18 +7,21 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { TransactionModule } from './transaction/transaction.module';
 import { SeedsModule } from './db/seeds/seeds.module';
 import { AppService } from './app.service';
-import { APP_FILTER } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { GlobalExceptionsFilter } from './helpers/exceptionFilter.helpers';
 import { AuthModule } from './auth/auth.module';
+import { AuthGuard } from './auth/guards/auth.guard';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot(dataSourceOptions),
+    AuthModule,
     UserModule,
     TransactionModule,
     SeedsModule,
-    AuthModule,
+    JwtModule,
   ],
   controllers: [AppController],
   providers: [
@@ -26,6 +29,10 @@ import { AuthModule } from './auth/auth.module';
     {
       provide: APP_FILTER,
       useClass: GlobalExceptionsFilter,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
     },
   ],
 })
