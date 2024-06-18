@@ -7,6 +7,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { TransactionModule } from './transaction/transaction.module';
 import { SeedsModule } from './db/seeds/seeds.module';
 import { AppService } from './app.service';
+import { APP_FILTER } from '@nestjs/core';
+import { GlobalExceptionsFilter } from './helpers/exceptionFilter.helpers';
 
 @Module({
   imports: [
@@ -17,6 +19,12 @@ import { AppService } from './app.service';
     SeedsModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_FILTER,
+      useClass: GlobalExceptionsFilter,
+    },
+  ],
 })
 export class AppModule {}
