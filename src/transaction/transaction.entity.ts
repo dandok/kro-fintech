@@ -1,4 +1,4 @@
-import { ETransactionType } from 'src/@types/transaction.enum';
+import { ETransactionType } from '../@types/transaction.enum';
 import { BaseEntity } from '../helpers/db.helpers';
 import { Entity, Column, ManyToOne } from 'typeorm';
 import { User } from '../user/user.entity';

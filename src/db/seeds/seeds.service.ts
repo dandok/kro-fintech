@@ -5,7 +5,7 @@ import {
   OnModuleInit,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/user/user.entity';
+import { User } from '../../user/user.entity';
 import { Repository } from 'typeorm';
 import defaultUser from '../data/user.data';
 import { authHelpers } from '../../helpers/auth.helpers';
