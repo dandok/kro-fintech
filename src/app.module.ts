@@ -9,6 +9,7 @@ import { SeedsModule } from './db/seeds/seeds.module';
 import { AppService } from './app.service';
 import { APP_FILTER } from '@nestjs/core';
 import { GlobalExceptionsFilter } from './helpers/exceptionFilter.helpers';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { GlobalExceptionsFilter } from './helpers/exceptionFilter.helpers';
     UserModule,
     TransactionModule,
     SeedsModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [
