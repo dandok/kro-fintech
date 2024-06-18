@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
-import { createEntity } from '../utils/entity.utils';
+import { createEntity } from '../utils/entity';
 import { authHelpers } from '../helpers/auth.helpers';
 import { SignupDto } from '../auth/dto/signup.dto';
 

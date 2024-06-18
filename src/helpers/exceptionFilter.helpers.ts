@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HttpAdapterHost } from '@nestjs/core';
-import { ERROR_OCCURRED } from '../utils/error';
+import { ERROR_OCCURRED } from '../utils/constants';
 
 @Catch()
 export class GlobalExceptionsFilter implements ExceptionFilter {

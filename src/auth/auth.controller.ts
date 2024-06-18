@@ -1,10 +1,11 @@
-import { Body, Controller, HttpStatus, Post } from '@nestjs/common';
+import { Body, Controller, HttpStatus, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignupDto } from './dto/signup.dto';
 import { TResponse } from '../@types/app.types';
 import { User } from '../user/user.entity';
 import { LoginDto } from './dto/login.dto';
 import { Public } from './decorators/public.decorator';
+import { LoginAttemptsGuard } from './guards/login.attempt.guard';
 
 @Public()
 @Controller('auth')
@@ -22,6 +23,7 @@ export class AuthController {
   }
 
   @Post('login')
+  @UseGuards(LoginAttemptsGuard)
   async login(@Body() data: LoginDto): Promise<TResponse<string>> {
     const response = await this.authService.login(data);
     return {

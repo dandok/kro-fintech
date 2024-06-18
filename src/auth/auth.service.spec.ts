@@ -39,6 +39,15 @@ describe('AuthService', () => {
             signAsync: jest.fn(),
           },
         },
+        {
+          provide: 'REDIS_CLIENT',
+          useValue: {
+            get: jest.fn(),
+            set: jest.fn(),
+            del: jest.fn(),
+            incr: jest.fn(),
+          },
+        },
       ],
     }).compile();
 

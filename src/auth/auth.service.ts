@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   ConflictException,
+  Inject,
   Injectable,
   Logger,
   NotFoundException,
@@ -11,6 +12,8 @@ import { authHelpers } from '../helpers/auth.helpers';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '../user/user.entity';
 import { LoginDto } from './dto/login.dto';
+import Redis from 'ioredis';
+import { LOCK_DURATION, MAX_ATTEMPTS } from '../utils/constants';
 
 @Injectable()
 export class AuthService {
@@ -19,6 +22,7 @@ export class AuthService {
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
+    @Inject('REDIS_CLIENT') private readonly redisClient: Redis,
   ) {
     this.logger = new Logger(this.constructor.name);
   }
@@ -45,8 +49,6 @@ export class AuthService {
   }
 
   async login(data: LoginDto): Promise<{ user: Partial<User>; token: string }> {
-    //TODO: account lock based on multiple failed attempts,
-    //check user, check if suspended, password match, 3 attempts, lock
     const existingUser = await this.userService.findUserByEmail(data.email);
     if (!existingUser) throw new NotFoundException('user not found');
 
@@ -56,10 +58,44 @@ export class AuthService {
     );
 
     if (!passwordMatch) {
+      await this.incrementFailedAttempts(data.email);
       throw new BadRequestException('Invalid credentials');
     }
 
+    await this.redisClient.del(`failed_login_attempts:${data.email}`);
     const token = await this.jwtService.signAsync({ email: data.email });
     return { user: authHelpers.serializeUser(existingUser), token };
+  }
+
+  private async incrementFailedAttempts(email: string) {
+    const failedLoginAttemptsKey = `failed_login_attempts:${email}`;
+    const lockUntilKey = `lock_until:${email}`;
+
+    const currentFailedAttempts = await this.redisClient.incr(
+      failedLoginAttemptsKey,
+    );
+
+    if (currentFailedAttempts > MAX_ATTEMPTS) {
+      const lockDuration = LOCK_DURATION;
+      const lockUntil = new Date(Date.now() + lockDuration * 1000);
+
+      await this.redisClient.set(
+        lockUntilKey,
+        lockUntil.toISOString(),
+        'EX',
+        lockDuration,
+      );
+
+      await this.redisClient.del(failedLoginAttemptsKey);
+
+      throw new BadRequestException(
+        'Account locked due to multiple failed attempts',
+      );
+    }
+  }
+
+  private async resetFailedAttempts(email: string) {
+    const failedLoginAttemptsKey = `failed_login_attempts:${email}`;
+    await this.redisClient.del(failedLoginAttemptsKey);
   }
 }
