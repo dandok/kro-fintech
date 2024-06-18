@@ -17,6 +17,7 @@ export class SignupDto {
   last_name: string;
 
   @IsEmail()
+  @IsNotEmpty()
   email: string;
 
   @IsString()
@@ -29,7 +30,4 @@ export class SignupDto {
   @IsString()
   @Match('password')
   confirm_password: string;
-
-  // @IsOtp(6)
-  // otp: number; //verify email
 }

@@ -110,7 +110,7 @@ describe('AuthService', () => {
       expect(jwtService.signAsync).toHaveBeenCalledWith({
         email: loginData.email,
       });
-      expect(result).toEqual({ token: 'mockedtoken' });
+      expect(result.token).toEqual('mockedtoken');
     });
 
     it('should throw NotFoundException if user does not exist', async () => {

@@ -44,8 +44,9 @@ export class AuthService {
     return { user, token };
   }
 
-  async login(data: LoginDto) {
-    //TODO: account lock based on multiple failed attempts
+  async login(data: LoginDto): Promise<{ user: Partial<User>; token: string }> {
+    //TODO: account lock based on multiple failed attempts,
+    //check user, check if suspended, password match, 3 attempts, lock
     const existingUser = await this.userService.findUserByEmail(data.email);
     if (!existingUser) throw new NotFoundException('user not found');
 
@@ -59,6 +60,6 @@ export class AuthService {
     }
 
     const token = await this.jwtService.signAsync({ email: data.email });
-    return { token };
+    return { user: authHelpers.serializeUser(existingUser), token };
   }
 }
