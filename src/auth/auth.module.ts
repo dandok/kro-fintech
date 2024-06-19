@@ -4,7 +4,7 @@ import { AuthController } from './auth.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { UserModule } from '../user/user.module';
 import { ConfigService } from '@nestjs/config';
-import Redis from 'ioredis';
+import { RedisModule } from './redis.module';
 
 @Module({
   imports: [
@@ -16,18 +16,9 @@ import Redis from 'ioredis';
       inject: [ConfigService],
     }),
     UserModule,
+    RedisModule,
   ],
   controllers: [AuthController],
-  providers: [
-    AuthService,
-    {
-      provide: 'REDIS_CLIENT',
-      useValue: new Redis({
-        host: 'localhost',
-        port: 6379,
-      }),
-    },
-  ],
-  exports: ['REDIS_CLIENT'],
+  providers: [AuthService],
 })
 export class AuthModule {}

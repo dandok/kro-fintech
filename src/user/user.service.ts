@@ -5,6 +5,8 @@ import { Repository } from 'typeorm';
 import { createEntity } from '../utils/entity';
 import { authHelpers } from '../helpers/auth.helpers';
 import { SignupDto } from '../auth/dto/signup.dto';
+import { TransactionService } from 'src/transaction/transaction.service';
+import { TQueryParams } from '../@types/app.types';
 
 @Injectable()
 export class UserService {
@@ -13,6 +15,7 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepo: Repository<User>,
+    private readonly transService: TransactionService,
   ) {
     this.logger = new Logger(this.constructor.name);
   }
@@ -26,5 +29,9 @@ export class UserService {
     const { confirm_password, ...userData } = data;
     const user = await this.userRepo.save(await createEntity(User, userData));
     return authHelpers.serializeUser(user);
+  }
+
+  async fetchMyTransactions(id: number, searchParam: TQueryParams) {
+    return await this.transService.fetchMyTransactions(id, searchParam);
   }
 }
