@@ -5,6 +5,10 @@ import { Transaction } from '../transaction/transaction.entity';
 import { User } from '../user/user.entity';
 config();
 
+/**
+ *  @synchronize is set to @false here just for quick development, in production migrations should be used.
+ */
+
 const configService = new ConfigService();
 
 export const dataSourceOptions: DataSourceOptions = {
@@ -15,9 +19,7 @@ export const dataSourceOptions: DataSourceOptions = {
   password: configService.get('DB_PASSWORD'),
   database: configService.get('DB_NAME'),
   entities: [User, Transaction],
-  // migrations: ['dist/db/migrations/*.js'],
-
-  synchronize: true, //only for the purpose of testing - migration should be used in production
+  synchronize: true,
   ssl:
     configService.get('NODE_ENV') === 'staging'
       ? true
