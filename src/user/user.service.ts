@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { createEntity } from '../utils/entity';
 import { authHelpers } from '../helpers/auth.helpers';
 import { SignupDto } from '../auth/dto/signup.dto';
-import { TransactionService } from 'src/transaction/transaction.service';
+import { TransactionService } from '../transaction/transaction.service';
 import { TQueryParams } from '../@types/app.types';
 
 @Injectable()

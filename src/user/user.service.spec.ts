@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { User } from './user.entity';
 import { authHelpers } from '../helpers/auth.helpers';
 import { savedUser, signupData } from '../test-mocks/user.mock';
+import { TransactionService } from '../transaction/transaction.service';
 
 describe('UserService', () => {
   let service: UserService;
@@ -14,6 +15,10 @@ describe('UserService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UserService,
+        {
+          provide: TransactionService,
+          useValue: { fetchMyTransactions: jest.fn() },
+        },
         {
           provide: getRepositoryToken(User),
           useClass: Repository,
