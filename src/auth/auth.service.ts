@@ -62,7 +62,7 @@ export class AuthService {
       throw new BadRequestException('Invalid credentials');
     }
 
-    await this.redisClient.del(`failed_login_attempts:${data.email}`);
+    await this.resetFailedAttempts(data.email);
     const token = await this.jwtService.signAsync({ email: data.email });
     return { user: authHelpers.serializeUser(existingUser), token };
   }
