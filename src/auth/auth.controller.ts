@@ -24,7 +24,7 @@ export class AuthController {
 
   @Post('login')
   @UseGuards(LoginAttemptsGuard)
-  async login(@Body() data: LoginDto): Promise<TResponse<string>> {
+  async login(@Body() data: LoginDto): Promise<TResponse<User>> {
     const response = await this.authService.login(data);
     return {
       ...response,

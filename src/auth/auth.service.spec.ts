@@ -123,14 +123,14 @@ describe('AuthService', () => {
     });
 
     it('should throw NotFoundException if user does not exist', async () => {
-      const loginDto: LoginDto = {
+      const login = {
         email: 'nonexistent@example.com',
         password: 'password',
       };
 
       jest.spyOn(userService, 'findUserByEmail').mockResolvedValue(null);
 
-      await expect(authService.login(loginDto)).rejects.toThrowError(
+      await expect(authService.login(login)).rejects.toThrowError(
         NotFoundException,
       );
     });
